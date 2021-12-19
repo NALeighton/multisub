@@ -9,7 +9,7 @@ class Multisub
     private static ComboBox? _interfaceCombo;
     private static ToggleButton? _bind;
 
-    private static List<string> _interfaceListStore = new();
+    private static readonly List<string> InterfaceListStore = new();
     
     static void Main()
     {
@@ -28,9 +28,9 @@ class Multisub
         interfaceHBox.Add(new Label("Interface"));
         foreach (var networkInterface in NetworkInterface.GetAllNetworkInterfaces())
         {
-            _interfaceListStore.Add(networkInterface.Name);
+            InterfaceListStore.Add(networkInterface.Name);
         }
-        _interfaceCombo = new ComboBox(_interfaceListStore.ToArray());
+        _interfaceCombo = new ComboBox(InterfaceListStore.ToArray());
         interfaceHBox.Add(_interfaceCombo);
         outerVBox.Add(interfaceHBox);
         _bind = new ToggleButton();
