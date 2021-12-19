@@ -27,10 +27,12 @@ class Multisub
             if (_bind.Active)
             {
                 _bind.Label = "Unbind";
+                _multicastGroup.Sensitive = false;
             }
             else
             {
                 _bind.Label = "Bind";
+                _multicastGroup.Sensitive = true;
             }
         };
         outerVBox.Add(_bind);
