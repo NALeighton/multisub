@@ -80,7 +80,14 @@ class Multisub
 
                 try
                 {
-                    _client = new UdpClient(_multicastGroup.Text, int.Parse(_port.Text));
+                    if (_port.Text == "")
+                    {
+                        _client = new UdpClient(_multicastGroup.Text, 3000);
+                    }
+                    else
+                    {
+                        _client = new UdpClient(_multicastGroup.Text, int.Parse(_port.Text));
+                    }
                     _client.JoinMulticastGroup(IPAddress.Parse(_multicastGroup.Text));
                 }
                 catch
