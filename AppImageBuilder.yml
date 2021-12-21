@@ -6,6 +6,7 @@ AppDir:
   app_info:
     id: com.naleighton.Multisub
     name: multisub
+    icon: icon
     version: latest
     exec: /usr/bin/multisub
 AppImage:

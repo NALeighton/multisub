@@ -18,13 +18,15 @@ jobs:
       - name: Build x86
         run: dotnet publish -c Release -r win-x86 --self-contained true
       - name: Zip x64
-        uses: montudor/action-zip@v1
+        uses: papeloto/action-zip@v1
         with:
-          args: zip -qq -r Multisub_Windows_x64.zip multisub/bin/Release/net6.0/win-x64
+          files: multisub/bin/Release/net6.0/win-x64
+          dest: Multisub_Windows_x64.zip
       - name: Zip x86
-        uses: montudor/action-zip@v1
+        uses: papeloto/action-zip@v1
         with:
-          args: zip -qq -r Multisub_Windows_x86.zip multisub/bin/Release/net6.0/win-x86
+          files: multisub/bin/Release/net6.0/win-x86
+          dest: Multisub_Windows_x86.zip
       - name: Upload x64
         uses: actions/upload-artifact@v2
         with:
@@ -53,6 +55,7 @@ jobs:
         run: |
           mkdir -p AppDir/usr/bin
           mv multisub/bin/Release/net6.0/linux-x64/* AppDir/usr/bin/
+          mv img/MultisubIcon.png AppDir/icon.png
       - name: Create Appimage
         uses: AppImageCrafters/build-appimage@master
         with:
@@ -79,7 +82,7 @@ jobs:
       - name: Assemble App
         run: |
           mkdir multisub.app
-          mv multisub/bin/Release/net6.0/linux-x64/* multisub.app/
+          mv multisub/bin/Release/net6.0/osx-x64/* multisub.app/
       - name: Upload App
         uses: actions/upload-artifact@v2
         with:
