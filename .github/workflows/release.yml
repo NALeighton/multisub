@@ -1,0 +1,87 @@
+name: Release
+on: workflow_dispatch
+jobs:
+  build-windows:
+    name: Build Windows
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build x64
+        run: dotnet publish -c Release -r win-x64 --self-contained true
+      - name: Build x86
+        run: dotnet publish -c Release -r win-x86 --self-contained true
+      - name: Zip x64
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r Multisub_Windows_x64.zip multisub/bin/Release/net6.0/win-x64
+      - name: Zip x86
+        uses: montudor/action-zip@v1
+        with:
+          args: zip -qq -r Multisub_Windows_x86.zip multisub/bin/Release/net6.0/win-x86
+      - name: Upload x64
+        uses: actions/upload-artifact@v2
+        with:
+          name: Multisub_Windows_x64
+          path: Multisub_Windows_x64.zip
+      - name: Upload x86
+        uses: actions/upload-artifact@v2
+        with:
+          name: Multisub_Windows_x86
+          path: Multisub_Windows_x86.zip
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet publish -c Release -r linux-x64 --self-contained true
+      - name: Assemble AppDir
+        run: |
+          mkdir -p AppDir/usr/bin
+          mv multisub/bin/Release/net6.0/linux-x64/* AppDir/usr/bin/
+      - name: Create Appimage
+        uses: AppImageCrafters/build-appimage@master
+        with:
+          recipe: "AppImageBuilder.yml"
+      - name: Upload Appimage
+        uses: actions/upload-artifact@v2
+        with:
+          name: Multisub_Linux_Appimage
+          path: AppImage
+  build-macos:
+    name: Build macOS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet publish -c Release -r osx-x64 --self-contained true
+      - name: Assemble App
+        run: |
+          mkdir multisub.app
+          mv multisub/bin/Release/net6.0/linux-x64/* multisub.app/
+      - name: Upload App
+        uses: actions/upload-artifact@v2
+        with:
+          name: Multisub_macOS_app
+          path: multisub.app

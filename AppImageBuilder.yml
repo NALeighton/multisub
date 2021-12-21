@@ -1,0 +1,13 @@
+version: 1
+
+AppDir:
+  path: AppDir
+  
+  app_info:
+    id: com.naleighton.Multisub
+    name: multisub
+    version: latest
+    exec: /usr/bin/multisub
+AppImage:
+  arch: x64
+  sign-key: None
